@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+    php:
+        container_name: api-orders
+        build:
+            context: .
+            dockerfile: .docker/apache/dockerfile
+        image: 'ubuntu-laravel'
+        ports:
+            - 80:80
+        volumes:
+          - .:/var/www/html
+        networks:
+          - internal-compose-network
+
+    mysqlsrv:
+      container_name: mysql-orders
+      image: mysql:8.3
+      command: --explicit_defaults_for_timestamp
+      environment:
+        MYSQL_ROOT_PASSWORD: "root"
+        MYSQL_DATABASE: "orders"
+      ports:
+        - "3306:3306"
+      volumes:
+        - .:/var/lib/sql
+      networks:
+        - internal-compose-network
+        
+networks: 
+  internal-compose-network:
+    driver: bridge
